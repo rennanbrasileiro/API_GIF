@@ -1,0 +1,22 @@
+POST http://localhost:8080/api/solicitacao
+Content-Type: application/json
+
+{
+  "servicoSolicitacao": "PROIND - INDUSTRIAL",
+  "nomeSolicitante": "João Silva",
+  "emailSolicitante": "joao.silva@example.com",
+  "cnpj": "00.000.000/0001-92",
+  "migracaoProdepProind": "N",
+  "naturezaProjeto": "Natureza 1",
+  "estabelecimento": "1 - Em Instalação",
+  "tipoAnexo": null,
+  "arquivoPdf": null
+}
+
+
+//Limpar e Compilar o Projeto: mvn clean install
+
+//Iniciar o Servidor: mvn spring-boot:run
+
+//Pra rodar a aplicação com o DB2, basta ativar esse perfil com -Dspring.profiles.active=db2 
+//Pra rodar a versão antiga sem o banco de dados(mockado), basta rodar sem o perfil DB2.
