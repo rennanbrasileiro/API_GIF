@@ -24,8 +24,8 @@
     <repositories>
         <!-- Repositório IBM Maven -->
         <repository>
-            <id>ibm-maven-repo</id>
-            <url>https://mvnrepository.com/artifact/</url>
+<id>maven2</id>
+<url>https://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -59,12 +59,11 @@
         </dependency>
 
         <!-- Driver JDBC DB2 -->
-        <!-- https://mvnrepository.com/artifact/com.ibm.db2.jcc/db2jcc4 -->
+
         <dependency>
-            <groupId>com.ibm.db2.jcc</groupId>
-            <artifactId>db2jcc4</artifactId>
-            <version>10.1</version>
-            <scope>test</scope>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>jcc</artifactId>
+            <version>11.5.9.0</version>
         </dependency>
 
 
@@ -83,4 +82,5 @@
             </plugin>
         </plugins>
     </build>
+    
 </project>
