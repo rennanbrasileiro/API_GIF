@@ -55,6 +55,20 @@ public class SolicitacaoController {
 
     @GetMapping("/status")
     public ResponseEntity<String> status() {
-        return ResponseEntity.ok("Servidor está funcionando!");
+            String mensagem = """
+            <html>
+                <body style="font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; padding: 50px;">
+                    <div style="display: inline-block; background-color: #6c757d; color: #fff; padding: 20px; border-radius: 10px;">
+                        <h1>📡 Servidor Ativo!</h1>
+                        <p>O servidor está funcionando corretamente e pronto para processar solicitações.</p>
+                        <p>Data e Hora Atual: <strong>%s</strong></p>
+                        <p>Entre em contato caso precise de ajuda adicional!</p>
+                    </div>
+                </body>
+            </html>
+        """;
+        String dataHoraAtual = java.time.LocalDateTime.now().toString();
+        
+        return ResponseEntity.ok(String.format(mensagem, dataHoraAtual));
     }
 }
