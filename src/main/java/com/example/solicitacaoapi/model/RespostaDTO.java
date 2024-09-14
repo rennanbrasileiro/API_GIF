@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Table(name = "resposta")
 public class RespostaDTO {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,6 +15,6 @@ public class RespostaDTO {
     private String status;
     private String numeroProtocolo;
     private String anexoResumo;
-    private String situacaoSolicitacao;  // Sempre será "Em andamento" se status for "OK"
-    private String mensagemExcecao;  // Só será preenchido quando houver exceção
+    private String situacaoSolicitacao;
+    private String mensagemExcecao;
 }

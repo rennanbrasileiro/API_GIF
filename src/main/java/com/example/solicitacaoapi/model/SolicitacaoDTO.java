@@ -38,14 +38,10 @@ public class SolicitacaoDTO {
     private String estabelecimento;
 
     @NotNull(message = "Quantidade de empregos é obrigatória")
-    private Integer qtdEmpregos;
+    private Integer quantidadeEmpregos;
 
     @NotNull(message = "Valor de investimento é obrigatório")
-    private Double valorInvestimento;
+    private Double valorInvestimentos;
 
-    @NotBlank(message = "Tipo de anexo é obrigatório")
-    private String tipoAnexo;
-
-    @NotBlank(message = "Arquivo PDF é obrigatório")
     private String arquivoPdf;
 }

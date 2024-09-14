@@ -1,26 +1,24 @@
--- Criação da tabela solicitacao
 CREATE TABLE solicitacao (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    servicoSolicitacao VARCHAR(255),
-    nomeSolicitante VARCHAR(255),
-    emailSolicitante VARCHAR(255),
-    cnpj VARCHAR(18),
-    migracaoProdepProind VARCHAR(10),
-    naturezaProjeto VARCHAR(255),
+    servico_solicitacao VARCHAR(255),
+    nome_solicitante VARCHAR(255),
+    email_solicitante VARCHAR(255),
+    cnpj VARCHAR(20),
+    migracao_prodep_proind CHAR(1),  -- Alterado para CHAR(1)
+    natureza_projeto VARCHAR(255),
     estabelecimento VARCHAR(255),
-    qtdEmpregos INT,
-    valorInvestimento DOUBLE,
-    tipoAnexo VARCHAR(10),
-    arquivoPdf VARCHAR(255)
+    qtd_empregos INT,
+    valor_investimento DECIMAL(10, 2),
+    tipo_anexo VARCHAR(50),
+    arquivo_pdf VARCHAR(255)
 );
 
--- Criação da tabela resposta
+-- Criação da tabela 'resposta'
 CREATE TABLE resposta (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    status VARCHAR(10),
-    numeroProtocolo VARCHAR(50),
-    anexoResumo VARCHAR(255),
-    situacaoSolicitacao VARCHAR(20),
-    mensagemExcecao VARCHAR(255)
+    status VARCHAR(255),
+    numero_protocolo VARCHAR(255),  
+    anexo_resumo VARCHAR(255),
+    situacao_solicitacao VARCHAR(255),
+    mensagem_excecao TEXT
 );
-
