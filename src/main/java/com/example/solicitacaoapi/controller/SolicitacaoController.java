@@ -18,16 +18,16 @@ public class SolicitacaoController {
 
     @PostMapping
     public ResponseEntity<RespostaDTO> receberSolicitacao(
-            @RequestParam String servicoSolicitacao,
-            @RequestParam String nomeSolicitante,
-            @RequestParam String emailSolicitante,
-            @RequestParam String cnpj,
-            @RequestParam String migracaoProdepeProind,
-            @RequestParam String naturezaProjeto,
-            @RequestParam String estabelecimento,
-            @RequestParam Integer quantidadeEmpregos,
-            @RequestParam Double valorInvestimentos,
-            @RequestParam MultipartFile arquivoPdf,
+            @RequestParam(required = true) String servicoSolicitacao,
+            @RequestParam(required = true) String nomeSolicitante,
+            @RequestParam(required = true) String emailSolicitante,
+            @RequestParam(required = true) String cnpj,
+            @RequestParam(required = true) String migracaoProdepeProind,
+            @RequestParam(required = true) String naturezaProjeto,
+            @RequestParam(required = true) String estabelecimento,
+            @RequestParam(required = true) Integer quantidadeEmpregos,
+            @RequestParam(required = true) Double valorInvestimentos,
+            @RequestParam(required = true) MultipartFile arquivoPdf,
             @RequestParam(required = false) MultipartFile contratoSocial,
             @RequestParam(required = false) MultipartFile cnpjCartaoRfb,
             @RequestParam(required = false) MultipartFile certificadoFgts,
@@ -39,12 +39,14 @@ public class SolicitacaoController {
             @RequestParam(required = false) MultipartFile migracaoDecretos,
             @RequestParam(required = false) MultipartFile outros) {
 
-        RespostaDTO resposta = solicitacaoService.processarSolicitacao(servicoSolicitacao, nomeSolicitante, emailSolicitante,
-                cnpj, migracaoProdepeProind, naturezaProjeto, estabelecimento, quantidadeEmpregos, valorInvestimentos,
-                arquivoPdf, contratoSocial, cnpjCartaoRfb, certificadoFgts, certidaoUniao, certidaoSefazPe, daeTfusp,
-                comprovanteDaeTfusp, procuracao, migracaoDecretos, outros);
+        RespostaDTO resposta = solicitacaoService.processarSolicitacao(
+                servicoSolicitacao, nomeSolicitante, emailSolicitante, cnpj,
+                migracaoProdepeProind, naturezaProjeto, estabelecimento,
+                quantidadeEmpregos, valorInvestimentos, arquivoPdf, contratoSocial,
+                cnpjCartaoRfb, certificadoFgts, certidaoUniao, certidaoSefazPe,
+                daeTfusp, comprovanteDaeTfusp, procuracao, migracaoDecretos, outros);
 
-        if (resposta.getStatus().equals("NOK")) {
+        if ("NOK".equals(resposta.getStatus())) {
             return ResponseEntity.badRequest().body(resposta);
         } else {
             return ResponseEntity.ok(resposta);

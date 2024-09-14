@@ -43,5 +43,5 @@ public class SolicitacaoDTO {
     @NotNull(message = "Valor de investimento é obrigatório")
     private Double valorInvestimentos;
 
-    private String arquivoPdf;
+    private String arquivoPdf; // Assumindo que o PDF é armazenado como um link ou nome de arquivo
 }
