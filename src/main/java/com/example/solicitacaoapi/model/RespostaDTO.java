@@ -15,6 +15,6 @@ public class RespostaDTO {
     private String status;
     private String numeroProtocolo;
     private String anexoResumo;
-    private String situacaoSolicitacao;
-    private String mensagemExcecao;
+    private String situacaoSolicitacao;  // Sempre será "Em andamento" se status for "OK"
+    private String mensagemExcecao;  // Só será preenchido quando houver exceção
 }
