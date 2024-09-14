@@ -22,19 +22,37 @@ public class SolicitacaoController {
     @PostMapping
     public ResponseEntity<RespostaDTO> receberSolicitacao(@RequestBody SolicitacaoDTO solicitacao) {
         RespostaDTO resposta = new RespostaDTO();
-
-        // Simulando validações e lógica de negócio
-        if (solicitacao.getCnpj().equals("00.000.000/0001-91")) {
-            resposta.setStatus("NOK");
-            resposta.setMensagemExcecao("CNPJ não cadastrado!");
-            respostaRepository.save(resposta);
-            return ResponseEntity.badRequest().body(resposta);
+        
+        // Verificação dos campos obrigatórios
+        StringBuilder mensagemExcecao = new StringBuilder();
+        if (solicitacao.getServicoSolicitacao() == null || solicitacao.getServicoSolicitacao().isEmpty()) {
+            mensagemExcecao.append("Serviço da Solicitação obrigatório não enviado! ");
+        }
+        if (solicitacao.getNomeSolicitante() == null || solicitacao.getNomeSolicitante().isEmpty()) {
+            mensagemExcecao.append("Nome do Solicitante obrigatório não enviado! ");
+        }
+        if (solicitacao.getEmailSolicitante() == null || solicitacao.getEmailSolicitante().isEmpty()) {
+            mensagemExcecao.append("E-mail do Solicitante obrigatório não enviado! ");
+        }
+        if (solicitacao.getCnpj() == null || solicitacao.getCnpj().isEmpty()) {
+            mensagemExcecao.append("CNPJ obrigatório não enviado! ");
+        } else {
+            // Verificando se o CNPJ está cadastrado na base de dados
+            boolean cnpjCadastrado = solicitacaoRepository.findByCnpj(solicitacao.getCnpj()).isPresent();
+            if (!cnpjCadastrado) {
+                mensagemExcecao.append("CNPJ não cadastrado! ");
+            }
+        }
+        if (solicitacao.getTipoAnexo() == null) {
+            mensagemExcecao.append("Tipo de anexo obrigatório não enviado! ");
+        }
+        if (solicitacao.getArquivoPdf() == null || solicitacao.getArquivoPdf().isEmpty()) {
+            mensagemExcecao.append("Arquivo PDF obrigatório não enviado!");
         }
 
-        // Validação dos Anexos
-        if (solicitacao.getTipoAnexo() == null || solicitacao.getArquivoPdf() == null) {
+        if (mensagemExcecao.length() > 0) {
             resposta.setStatus("NOK");
-            resposta.setMensagemExcecao("Anexo obrigatório não enviado!");
+            resposta.setMensagemExcecao(mensagemExcecao.toString());
             respostaRepository.save(resposta);
             return ResponseEntity.badRequest().body(resposta);
         }
