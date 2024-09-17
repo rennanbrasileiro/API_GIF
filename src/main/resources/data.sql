@@ -19,3 +19,6 @@ INSERT INTO resposta (status, numero_protocolo, anexo_resumo, situacao_solicitac
 ('OK', 'PROTOCOLO-006', 'resumo-mercado.pdf', 'Em andamento', NULL),
 ('NOK', 'PROTOCOLO-007', 'resumo-hardware.docx', NULL, 'Erro de processamento!'),
 ('OK', 'PROTOCOLO-008', 'resumo-juridica.pdf', 'Em andamento', NULL);
+
+
+--DELETE FROM SOLICITACAO WHERE ID = 9;
