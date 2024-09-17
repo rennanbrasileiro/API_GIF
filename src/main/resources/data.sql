@@ -1,5 +1,5 @@
 -- Inserindo dados de teste na tabela solicitacao
-INSERT INTO solicitacao (servico_solicitacao, nome_solicitante, email_solicitante, cnpj, migracao_prodep_proind, natureza_projeto, estabelecimento, qtd_empregos, valor_investimento, tipo_anexo, arquivo_pdf) VALUES
+INSERT INTO solicitacao (servico_solicitacao, nome_solicitante, email_solicitante, cnpj, migracao_prodep_proind, natureza_projeto, estabelecimento, quantidade_empregos, valor_investimentos, tipo_anexo, arquivo_pdf) VALUES
 ('Serviço de Tecnologia', 'Ana Souza', 'ana.souza@example.com', '11.111.111/0001-11', 'S', 'Desenvolvimento de Software', 'Tech Solutions', 25, 500000.00, 'PDF', 'tecnologia.pdf'),
 ('Consultoria Empresarial', 'Carlos Lima', 'carlos.lima@example.com', '22.222.222/0001-22', 'N', 'Consultoria para Negócios', 'Consultoria & Cia', 10, 150000.00, 'DOC', 'consultoria.docx'),
 ('Projeto Educacional', 'Fernanda Costa', 'fernanda.costa@example.com', '33.333.333/0001-33', 'S', 'Desenvolvimento de Curso', 'EducaPro', 5, 75000.00, 'PDF', 'educacional.pdf'),
@@ -10,7 +10,6 @@ INSERT INTO solicitacao (servico_solicitacao, nome_solicitante, email_solicitant
 ('Serviço de Consultoria Jurídica', 'Rodrigo Almeida', 'rodrigo.almeida@example.com', '88.888.888/0001-88', 'S', 'Consultoria Jurídica Especializada', 'LegalExperts', 7, 100000.00, 'PDF', 'juridica.pdf');
 
 -- Inserindo dados de teste na tabela resposta
--- Inserir dados na tabela 'resposta'
 INSERT INTO resposta (status, numero_protocolo, anexo_resumo, situacao_solicitacao, mensagem_excecao) VALUES
 ('OK', 'PROTOCOLO-001', 'resumo-tecnologia.pdf', 'Em andamento', NULL),
 ('NOK', 'PROTOCOLO-002', 'resumo-consultoria.docx', NULL, 'CNPJ não cadastrado!'),

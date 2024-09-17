@@ -2,6 +2,8 @@ package com.example.solicitacaoapi.controller;
 
 import com.example.solicitacaoapi.model.RespostaDTO;
 import com.example.solicitacaoapi.service.SolicitacaoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/solicitacao")
 public class SolicitacaoController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SolicitacaoController.class);
 
     private final SolicitacaoService solicitacaoService;
 
@@ -39,6 +43,10 @@ public class SolicitacaoController {
             @RequestParam(required = false) MultipartFile migracaoDecretos,
             @RequestParam(required = false) MultipartFile outros) {
 
+        // Adicionando logs para verificar se o arquivo foi recebido
+        logFileInfo(arquivoPdf, "arquivoPdf");
+
+        // Continue com o processamento normal
         RespostaDTO resposta = solicitacaoService.processarSolicitacao(
                 servicoSolicitacao, nomeSolicitante, emailSolicitante, cnpj,
                 migracaoProdepeProind, naturezaProjeto, estabelecimento,
@@ -53,9 +61,20 @@ public class SolicitacaoController {
         }
     }
 
+    private void logFileInfo(MultipartFile file, String fileName) {
+        if (file == null || file.isEmpty()) {
+            logger.error("O arquivo '{}' não foi recebido ou está vazio.", fileName);
+        } else {
+            logger.info("Arquivo '{}' recebido com sucesso.", fileName);
+            logger.info("Nome do arquivo: {}", file.getOriginalFilename());
+            logger.info("Tamanho do arquivo: {} bytes", file.getSize());
+            logger.info("Tipo de conteúdo: {}", file.getContentType());
+        }
+    }
+
     @GetMapping("/status")
     public ResponseEntity<String> status() {
-            String mensagem = """
+        String mensagem = """
             <html>
                 <body style="font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; padding: 50px;">
                     <div style="display: inline-block; background-color: #6c757d; color: #fff; padding: 20px; border-radius: 10px;">
@@ -68,7 +87,7 @@ public class SolicitacaoController {
             </html>
         """;
         String dataHoraAtual = java.time.LocalDateTime.now().toString();
-        
+
         return ResponseEntity.ok(String.format(mensagem, dataHoraAtual));
     }
 }

@@ -7,6 +7,9 @@ import com.example.solicitacaoapi.repository.RespostaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class SolicitacaoService {
 
@@ -43,8 +46,8 @@ public class SolicitacaoService {
             mensagemExcecao.append("CNPJ obrigatório não enviado! ");
         } else {
             // Verifica se o CNPJ está cadastrado na base de dados
-            boolean cnpjCadastrado = solicitacaoRepository.findByCnpj(cnpj).isPresent();
-            if (!cnpjCadastrado) {
+            List<SolicitacaoDTO> solicitacoesEncontradas = solicitacaoRepository.findByCnpj(cnpj);
+            if (solicitacoesEncontradas.isEmpty()) {
                 mensagemExcecao.append("CNPJ não cadastrado! ");
             }
         }
@@ -91,7 +94,21 @@ public class SolicitacaoService {
             return resposta;
         }
 
-        // Persistir a solicitação
+        // Verificar se há alguma solicitação existente em andamento para o mesmo CNPJ
+        List<SolicitacaoDTO> solicitacoesEmAndamento = solicitacaoRepository.findByCnpj(cnpj);
+        Optional<SolicitacaoDTO> solicitacaoEmAndamento = solicitacoesEmAndamento.stream()
+                .filter(s -> "Em Andamento".equals(s.getSituacaoSolicitacao()))
+                .findFirst();
+
+        if (solicitacaoEmAndamento.isPresent()) {
+            resposta.setStatus("NOK");
+            resposta.setMensagemExcecao("Já existe uma solicitação em andamento para este CNPJ.");
+            resposta.setNumeroProtocolo(solicitacaoEmAndamento.get().getNumeroProtocolo()); // Retorna o número de protocolo da solicitação em andamento
+            respostaRepository.save(resposta);
+            return resposta;
+        }
+
+        // Criar e persistir a nova solicitação
         SolicitacaoDTO solicitacao = new SolicitacaoDTO();
         solicitacao.setServicoSolicitacao(servicoSolicitacao);
         solicitacao.setNomeSolicitante(nomeSolicitante);
@@ -103,12 +120,17 @@ public class SolicitacaoService {
         solicitacao.setQuantidadeEmpregos(quantidadeEmpregos);
         solicitacao.setValorInvestimentos(valorInvestimentos);
         solicitacao.setArquivoPdf(arquivoPdf != null ? arquivoPdf.getOriginalFilename() : "Nome não disponível");
+        solicitacao.setSituacaoSolicitacao("Em Andamento");
+
+        // Gerar um número de protocolo
+        String numeroProtocolo = "PROTOCOL-" + System.currentTimeMillis(); // Exemplo de geração de número de protocolo
+        solicitacao.setNumeroProtocolo(numeroProtocolo);
 
         solicitacaoRepository.save(solicitacao);
 
         // Criar e retornar resposta
         resposta.setStatus("OK");
-        resposta.setNumeroProtocolo("2024PROTOCOL123");
+        resposta.setNumeroProtocolo(numeroProtocolo);
         resposta.setAnexoResumo("Link para o PDF de Resumo");
         resposta.setSituacaoSolicitacao("Em Andamento");
         respostaRepository.save(resposta);

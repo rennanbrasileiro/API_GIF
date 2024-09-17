@@ -4,11 +4,11 @@ CREATE TABLE solicitacao (
     nome_solicitante VARCHAR(255),
     email_solicitante VARCHAR(255),
     cnpj VARCHAR(20),
-    migracao_prodep_proind CHAR(1),  -- Alterado para CHAR(1)
+    migracao_prodep_proind CHAR(1),  
     natureza_projeto VARCHAR(255),
     estabelecimento VARCHAR(255),
-    qtd_empregos INT,
-    valor_investimento DECIMAL(10, 2),
+    quantidade_empregos INTEGER,
+    valor_investimentos DECIMAL(10, 2),
     tipo_anexo VARCHAR(50),
     arquivo_pdf VARCHAR(255)
 );
