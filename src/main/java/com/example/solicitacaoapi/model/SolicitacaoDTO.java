@@ -59,9 +59,9 @@ public class SolicitacaoDTO {
     @Column(nullable = false)
     private Double valorInvestimentos;
 
-    @NotNull(message = "Data de constituição é obrigatória") // Alterado para NotNull
+    @NotNull(message = "Data de constituição é obrigatória")
     @Column(nullable = false)
-    private LocalDate dataConstituicao; // Alterado para LocalDate
+    private LocalDate dataConstituicao; // LocalDate para armazenar a data
 
     private String arquivoPdf; // Nome do arquivo ou link para o PDF
 

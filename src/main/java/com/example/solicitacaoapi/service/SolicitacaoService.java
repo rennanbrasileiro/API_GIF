@@ -27,7 +27,7 @@ public class SolicitacaoService {
     public RespostaDTO processarSolicitacao(String servicoSolicitacao, String nomeSolicitante, String telefoneSolicitante,
                                              String emailSolicitante, String cnpj, String migracaoProdepeProind,
                                              String naturezaProjeto, String estabelecimento, Integer quantidadeEmpregos,
-                                             Double valorInvestimentos, String dataConstituicao, // Mudança para String
+                                             Double valorInvestimentos, String dataConstituicao, // String para a data
                                              MultipartFile arquivoPdf,
                                              MultipartFile contratoSocial, MultipartFile cnpjCartaoRfb,
                                              MultipartFile certificadoFgts, MultipartFile certidaoUniao,
@@ -50,10 +50,10 @@ public class SolicitacaoService {
 
         // Validação e conversão da data de constituição
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy"); // Formato DDMMAAAA
             dataConstituicaoDate = LocalDate.parse(dataConstituicao, formatter);
         } catch (DateTimeParseException e) {
-            mensagemExcecao.append("Data de constituição inválida. Use o formato 'YYYY-MM-DD'.\n");
+            mensagemExcecao.append("Data de constituição inválida. Use o formato 'DDMMAAAA'.\n");
         }
 
         if (mensagemExcecao.length() > 0) {
@@ -175,7 +175,7 @@ public class SolicitacaoService {
         SolicitacaoDTO solicitacao = new SolicitacaoDTO();
         solicitacao.setServicoSolicitacao(servicoSolicitacao);
         solicitacao.setNomeSolicitante(nomeSolicitante);
-        solicitacao.setTelefoneSolicitante(telefoneSolicitante); // Novo campo
+        solicitacao.setTelefoneSolicitante(telefoneSolicitante);
         solicitacao.setEmailSolicitante(emailSolicitante);
         solicitacao.setCnpj(cnpj);
         solicitacao.setMigracaoProdepProind(migracaoProdepeProind);
@@ -183,7 +183,7 @@ public class SolicitacaoService {
         solicitacao.setEstabelecimento(estabelecimento);
         solicitacao.setQuantidadeEmpregos(quantidadeEmpregos);
         solicitacao.setValorInvestimentos(valorInvestimentos);
-        solicitacao.setDataConstituicao(dataConstituicao); // Agora é LocalDate diretamente
+        solicitacao.setDataConstituicao(dataConstituicao);
         solicitacao.setArquivoPdf(arquivoPdf != null ? arquivoPdf.getOriginalFilename() : "Nome não disponível");
         solicitacao.setSituacaoSolicitacao("Em Andamento");
         solicitacao.setNumeroProtocolo(gerarNumeroProtocolo());
