@@ -17,7 +17,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/solicitacao")
@@ -43,7 +42,7 @@ public class SolicitacaoController {
             @RequestParam String estabelecimento,
             @RequestParam Integer quantidadeEmpregos,
             @RequestParam Double valorInvestimentos,
-            @RequestParam LocalDate dataConstituicao, // Campo alterado para LocalDate
+            @RequestParam String dataConstituicao, // Alterado para String
             @RequestParam MultipartFile arquivoPdf,
             @RequestParam(required = false) MultipartFile contratoSocial,
             @RequestParam(required = false) MultipartFile cnpjCartaoRfb,
@@ -57,7 +56,7 @@ public class SolicitacaoController {
             @RequestParam(required = false) MultipartFile outros) {
 
         // Validação do campo dataConstituicao
-        if (dataConstituicao == null) {
+        if (dataConstituicao == null || dataConstituicao.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(new RespostaDTO("NOK", "O campo data de constituição é obrigatório."));
         }

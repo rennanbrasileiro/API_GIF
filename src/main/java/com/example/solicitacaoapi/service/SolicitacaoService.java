@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,8 @@ public class SolicitacaoService {
     public RespostaDTO processarSolicitacao(String servicoSolicitacao, String nomeSolicitante, String telefoneSolicitante,
                                              String emailSolicitante, String cnpj, String migracaoProdepeProind,
                                              String naturezaProjeto, String estabelecimento, Integer quantidadeEmpregos,
-                                             Double valorInvestimentos, LocalDate dataConstituicao, MultipartFile arquivoPdf,
+                                             Double valorInvestimentos, String dataConstituicao, // Mudança para String
+                                             MultipartFile arquivoPdf,
                                              MultipartFile contratoSocial, MultipartFile cnpjCartaoRfb,
                                              MultipartFile certificadoFgts, MultipartFile certidaoUniao,
                                              MultipartFile certidaoSefazPe, MultipartFile daeTfusp,
@@ -34,6 +37,7 @@ public class SolicitacaoService {
 
         RespostaDTO resposta = new RespostaDTO();
         StringBuilder mensagemExcecao = new StringBuilder();
+        LocalDate dataConstituicaoDate = null; // Inicializa como null
 
         // Validação dos campos obrigatórios
         validarCamposObrigatorios(servicoSolicitacao, nomeSolicitante, telefoneSolicitante, emailSolicitante,
@@ -43,6 +47,14 @@ public class SolicitacaoService {
         validarAnexosObrigatorios(contratoSocial, cnpjCartaoRfb, certificadoFgts, certidaoUniao,
                 certidaoSefazPe, daeTfusp, comprovanteDaeTfusp, procuracao, migracaoDecretos, outros,
                 mensagemExcecao);
+
+        // Validação e conversão da data de constituição
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            dataConstituicaoDate = LocalDate.parse(dataConstituicao, formatter);
+        } catch (DateTimeParseException e) {
+            mensagemExcecao.append("Data de constituição inválida. Use o formato 'YYYY-MM-DD'.\n");
+        }
 
         if (mensagemExcecao.length() > 0) {
             resposta.setStatus("NOK");
@@ -60,7 +72,7 @@ public class SolicitacaoService {
         // Criar e persistir a nova solicitação
         SolicitacaoDTO solicitacao = criarSolicitacao(servicoSolicitacao, nomeSolicitante, telefoneSolicitante,
                 emailSolicitante, cnpj, migracaoProdepeProind, naturezaProjeto, estabelecimento,
-                quantidadeEmpregos, valorInvestimentos, dataConstituicao, arquivoPdf);
+                quantidadeEmpregos, valorInvestimentos, dataConstituicaoDate, arquivoPdf);
 
         solicitacaoRepository.save(solicitacao);
 
@@ -174,11 +186,13 @@ public class SolicitacaoService {
         solicitacao.setDataConstituicao(dataConstituicao); // Agora é LocalDate diretamente
         solicitacao.setArquivoPdf(arquivoPdf != null ? arquivoPdf.getOriginalFilename() : "Nome não disponível");
         solicitacao.setSituacaoSolicitacao("Em Andamento");
-
-        // Geração de número de protocolo
-        String numeroProtocolo = "PROTOCOL-" + System.currentTimeMillis();
-        solicitacao.setNumeroProtocolo(numeroProtocolo);
+        solicitacao.setNumeroProtocolo(gerarNumeroProtocolo());
 
         return solicitacao;
+    }
+
+    private String gerarNumeroProtocolo() {
+        // Implementar lógica para gerar número de protocolo, pode ser UUID ou qualquer outra lógica
+        return "PROTOCOLO-" + System.currentTimeMillis(); // Exemplo simples
     }
 }
