@@ -2,6 +2,7 @@ CREATE TABLE solicitacao (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     servico_solicitacao VARCHAR(255),
     nome_solicitante VARCHAR(255),
+    telefone_solicitante VARCHAR(20),
     email_solicitante VARCHAR(255),
     cnpj VARCHAR(20),
     migracao_prodep_proind CHAR(1),  
@@ -9,6 +10,7 @@ CREATE TABLE solicitacao (
     estabelecimento VARCHAR(255),
     quantidade_empregos INTEGER,
     valor_investimentos DECIMAL(10, 2),
+    data_constituicao DATE,
     tipo_anexo VARCHAR(50),
     arquivo_pdf VARCHAR(255)
 );

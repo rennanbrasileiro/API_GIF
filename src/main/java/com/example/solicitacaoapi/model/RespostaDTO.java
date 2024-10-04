@@ -17,4 +17,22 @@ public class RespostaDTO {
     private String anexoResumo;
     private String situacaoSolicitacao;
     private String mensagemExcecao;
+
+    // Construtor padrão
+    public RespostaDTO() {
+    }
+
+    // Construtor para usar em respostas de erro
+    public RespostaDTO(String status, String mensagemExcecao) {
+        this.status = status;
+        this.mensagemExcecao = mensagemExcecao;
+    }
+
+    // Construtor para uso geral
+    public RespostaDTO(String status, String numeroProtocolo, String anexoResumo, String situacaoSolicitacao) {
+        this.status = status;
+        this.numeroProtocolo = numeroProtocolo;
+        this.anexoResumo = anexoResumo;
+        this.situacaoSolicitacao = situacaoSolicitacao;
+    }
 }

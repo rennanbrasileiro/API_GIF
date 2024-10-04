@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -24,6 +25,10 @@ public class SolicitacaoDTO {
     @NotBlank(message = "Nome do solicitante é obrigatório")
     @Column(nullable = false)
     private String nomeSolicitante;
+
+    @NotBlank(message = "Telefone do solicitante é obrigatório")
+    @Column(nullable = false)
+    private String telefoneSolicitante;
 
     @Email(message = "Email do solicitante deve ser válido")
     @NotBlank(message = "Email do solicitante é obrigatório")
@@ -54,8 +59,12 @@ public class SolicitacaoDTO {
     @Column(nullable = false)
     private Double valorInvestimentos;
 
-    private String arquivoPdf; // Assumindo que o PDF é armazenado como um link ou nome de arquivo
+    @NotNull(message = "Data de constituição é obrigatória") // Alterado para NotNull
+    @Column(nullable = false)
+    private LocalDate dataConstituicao; // Alterado para LocalDate
+
+    private String arquivoPdf; // Nome do arquivo ou link para o PDF
 
     private String situacaoSolicitacao;  
-    private String numeroProtocolo;       
+    private String numeroProtocolo;
 }

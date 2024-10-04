@@ -17,13 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/solicitacao")
 public class SolicitacaoController {
 
     private static final Logger logger = LoggerFactory.getLogger(SolicitacaoController.class);
-
     private final SolicitacaoService solicitacaoService;
     private final String baseUrl = "http://localhost:8080/api/solicitacao/pdf/";
 
@@ -35,6 +35,7 @@ public class SolicitacaoController {
     public ResponseEntity<RespostaDTO> receberSolicitacao(
             @RequestParam String servicoSolicitacao,
             @RequestParam String nomeSolicitante,
+            @RequestParam String telefoneSolicitante,
             @RequestParam String emailSolicitante,
             @RequestParam String cnpj,
             @RequestParam String migracaoProdepeProind,
@@ -42,6 +43,7 @@ public class SolicitacaoController {
             @RequestParam String estabelecimento,
             @RequestParam Integer quantidadeEmpregos,
             @RequestParam Double valorInvestimentos,
+            @RequestParam LocalDate dataConstituicao, // Campo alterado para LocalDate
             @RequestParam MultipartFile arquivoPdf,
             @RequestParam(required = false) MultipartFile contratoSocial,
             @RequestParam(required = false) MultipartFile cnpjCartaoRfb,
@@ -54,14 +56,20 @@ public class SolicitacaoController {
             @RequestParam(required = false) MultipartFile migracaoDecretos,
             @RequestParam(required = false) MultipartFile outros) {
 
+        // Validação do campo dataConstituicao
+        if (dataConstituicao == null) {
+            return ResponseEntity.badRequest()
+                    .body(new RespostaDTO("NOK", "O campo data de constituição é obrigatório."));
+        }
+
         // Logando informações dos arquivos para garantir que foram recebidos
         logFileInfo(arquivoPdf, "arquivoPdf");
 
         // Continue com o processamento normal
         RespostaDTO resposta = solicitacaoService.processarSolicitacao(
-                servicoSolicitacao, nomeSolicitante, emailSolicitante, cnpj,
+                servicoSolicitacao, nomeSolicitante, telefoneSolicitante, emailSolicitante, cnpj,
                 migracaoProdepeProind, naturezaProjeto, estabelecimento,
-                quantidadeEmpregos, valorInvestimentos, arquivoPdf, contratoSocial,
+                quantidadeEmpregos, valorInvestimentos, dataConstituicao, arquivoPdf, contratoSocial,
                 cnpjCartaoRfb, certificadoFgts, certidaoUniao, certidaoSefazPe,
                 daeTfusp, comprovanteDaeTfusp, procuracao, migracaoDecretos, outros);
 
@@ -77,7 +85,7 @@ public class SolicitacaoController {
         // Salvar PDF em um diretório acessível para download
         String pdfPath = "pdf/" + protocolo + ".pdf";
         byte[] pdfBytes = gerarPdf(
-                servicoSolicitacao, nomeSolicitante, emailSolicitante, cnpj, migracaoProdepeProind,
+                servicoSolicitacao, nomeSolicitante, telefoneSolicitante, emailSolicitante, cnpj, migracaoProdepeProind,
                 naturezaProjeto, estabelecimento, quantidadeEmpregos, valorInvestimentos,
                 contratoSocial != null ? contratoSocial.getOriginalFilename() : "Não fornecido",
                 cnpjCartaoRfb != null ? cnpjCartaoRfb.getOriginalFilename() : "Não fornecido",
@@ -141,7 +149,7 @@ public class SolicitacaoController {
     }
 
     // Método para gerar o PDF a partir dos parâmetros da solicitação
-    private byte[] gerarPdf(String servicoSolicitacao, String nomeSolicitante, String emailSolicitante, String cnpj,
+    private byte[] gerarPdf(String servicoSolicitacao, String nomeSolicitante, String telefoneSolicitante, String emailSolicitante, String cnpj,
                             String migracaoProdepeProind, String naturezaProjeto, String estabelecimento,
                             Integer quantidadeEmpregos, Double valorInvestimentos,
                             String contratoSocial, String cnpjCartaoRfb, String certificadoFgts,
@@ -156,6 +164,7 @@ public class SolicitacaoController {
             document.add(new Paragraph("Dados da Solicitação"));
             document.add(new Paragraph("Serviço Solicitado: " + servicoSolicitacao));
             document.add(new Paragraph("Nome do Solicitante: " + nomeSolicitante));
+            document.add(new Paragraph("Telefone do Solicitante: " + telefoneSolicitante));
             document.add(new Paragraph("E-mail do Solicitante: " + emailSolicitante));
             document.add(new Paragraph("CNPJ: " + cnpj));
             document.add(new Paragraph("Migração Prodepe Proind: " + migracaoProdepeProind));
